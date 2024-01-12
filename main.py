@@ -22,12 +22,25 @@ def func3(func):
     def wrapper(student_name, course_name):
         func(student_name, course_name)
         print('excellent!!!')
+    return wrapper 
 
 def func4(func):
     def wrapper():
         students = func()
         print(students)
+    return wrapper
 
+def func5(func):
+    def wrapper():
+        courses = func()
+        print(courses)
+    return wrapper
+
+def func6(func):
+    def wrapper(course_name):
+        students = func(course_name)
+        print(students)
+        
 @func1
 def new_student(name, age, major):
     cursor.execute('''
@@ -54,13 +67,16 @@ def get_students_info():
     cursor.execute('SELECT name, major FROM students')
     return cursor.fetchall()
 
+@func5
 def get_courses_info():
     cursor.execute('SELECT name, instructor FROM courses')
     return cursor.fetchall()
 
+@func6
 def get_students_by_course(course_name):
     cursor.execute('''
     SELECT name, major FROM students WHERE id = (SELECT student_id FROM relation_table WHERE course_id = (SELECT course_id FROM courses WHERE course_name = (?)))
-''', course_name)
+    ''', course_name)
+    return cursor.fetchall()
 
 
